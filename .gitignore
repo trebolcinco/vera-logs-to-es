@@ -1,0 +1,11 @@
+Keyboard Shortcuts
+environment.fish
+*.pyc
+launch.json
+settings.json
+0
+build.sh
+*.sh
+docker.env
+__pycache__
+.vscode
