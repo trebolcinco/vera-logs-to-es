@@ -5,7 +5,7 @@ ENV ES_HOST="0.0.0.0" \
     VERA_LOG_INDEX="vera-log" \
     VERA_HOST="0.0.0.0" \
     SLEEP_TIME=60 \
-    REBOOT_TIME="03:00:00"
+    REBOOT_TIME=
 WORKDIR /vera-log-to-es
 COPY ./requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
