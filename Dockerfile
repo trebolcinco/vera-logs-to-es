@@ -9,7 +9,6 @@ ENV ES_HOST="0.0.0.0" \
 WORKDIR /vera-log-to-es
 COPY ./requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
-WORKDIR /vera-log-to-es
-COPY *.py .
+COPY main.py .
 COPY functions/ functions/
 CMD ["python","-u","main.py"]
