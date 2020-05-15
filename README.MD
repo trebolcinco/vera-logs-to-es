@@ -17,3 +17,7 @@ These variables are defaulted but can be overridden.
 2. PYTHONUNBUFFERED=1          (Docker Only)
 3. SLEEP_TIME=60               (How much time to sleep between log calls)
 4. REBOOT_TIME="03:00:00"      (If you do a nightly reboot then what time is that? Allows us    to not add duplicate log info after the reboot).  **If you don't do a scheduled reboot then do not set reboot time (e.g, REBOOT_TIME=).**
+
+## What's Missing
+- Not support for a username/password for Elastic Search
+- Tests
