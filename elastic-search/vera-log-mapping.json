@@ -31,6 +31,9 @@
       "timestamp": {
         "type": "date"
       },
+      "machine_time": {
+        "type": "date"
+      },
       "vera_host": {
         "type": "text",
         "fields": {
