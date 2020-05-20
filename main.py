@@ -43,52 +43,50 @@ def compose(message, timestamp):
         'machine_time': datetime.now()
     }
     return doc
-
+last_line_count = 0
 while True:
     response = get_from_vera(url)
     # if str(response) == "reboot":
     #     lastLine = reboot
     #     continue
-    soup = BeautifulSoup(response.text, features="html.parser")
+    old_soup = BeautifulSoup(response.text, features="html.parser")
+    soup = BeautifulSoup(old_soup.text, features="html.parser")
     allLines = soup.text.split('\n')
-    found = -1
-    start_index = 0
-    lines = []
-    if not startup:
-        for i in range(len(allLines)-1,0,-1):
-            if lastLine in allLines[i] and re.search(tag_line_exp, allLines[i]):
-                start_index = i
-                break
-    else:
-        startup = False
-        start_index = 0
-        doc = compose("START INDEX RESET TO 0",datetime.now())
-        submit_to_es(es,doc)
 
+    if last_line_count <= len(allLines):
+        start_index = last_line_count
+    else:
+        start_index = 0
+    last_line_count = len(allLines)
+
+    lines = []
+    print('start index == {} and last_line_count = {}'.format(start_index,last_line_count))
     search = False
-    # print("Total # of lines {}".format(len(allLines)))
+    # print("Total # of lines {}".format(len./b (allLines)))
     # Find the last lines we exported and start adding from there.
     for i in range(start_index, len(allLines)):
         line = allLines[i]
         if re.search(tag_line_exp, str(line)) and not appendedLine == line:
             lines.append(line)
             appendedLine = line
-        else:
-            print("skipped line:",line)
 
     # now add those lines to elastic search
     match = None
     local_time = datetime.now().replace(tzinfo=tz.tzlocal())
-    print("Pushing {} lines to ES @ {}".format(len(lines), local_time), flush=True)
+    push_message = "Sent {} log lines to ES @ {}".format(len(lines), local_time)
+    print(push_message)
     if len(lines) > 0:
         for line in lines:
             theLine = str(line).split('\n')
             for aLine in theLine:
                 strippedText = aLine.split('\t')
                 if re.search(tag_line_exp, aLine) and len(strippedText) > 2:
-                    message = BeautifulSoup(aLine, features="html.parser").text
+                    if strippedText[2] == "UserData::TempLogFileSystemFailure start 0 <0x76608520>" and strippedText[1] == '05/20/20 3:17:28.369':
+                        print('dup @',strippedText[1])
+                    message = BeautifulSoup(strippedText[2], features="html.parser").text
                     timestamp = datetime.strptime(
                         re.search(date_exp, aLine).group(0),  '%m/%d/%y %H:%M:%S.%f')
                     submit_to_es(es, compose(message, timestamp))
         lastLine = aLine
+        submit_to_es(es,compose(push_message,datetime.now()))
     time.sleep(sleep_time)
