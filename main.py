@@ -35,7 +35,7 @@ date_exp = re.compile(r'\d{2}[-/]\d{2}[-/]\d{2} \d{1,2}:\d{2}:\d{2}.\d{3}')
 
 if not skip_reload:
     reload_es(es_base_url)
-
+    print("Elastic Search index {} has been deleted and reset.".format(vera_log_index))
 
 def compose(message, timestamp):
     doc = {
