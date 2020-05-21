@@ -32,12 +32,6 @@ def get_from_vera(url):
     except requests.exceptions.ConnectionError as errc:
         print("Error Connecting:", errc)
         time.sleep(sleep_time)
-        # if reboot_time:
-        #   startTime  = reboot_time
-        #   endTime = reboot_time + timedelta(minutes=15)
-        #   now = datetime.now()
-        #   if now > startTime and now < endTime:
-        #     return "reboot"
         continue
     except requests.exceptions.Timeout as errt:
         print("Timeout Error:", errt)

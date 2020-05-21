@@ -9,16 +9,18 @@ Scrapes vera logs from the hubs http endpoint and then pushes them to Elastic Se
 ## Variables
 Following varaibles need to be set:
 
+<pre>
 1. ES_HOST="0.0.0.0"
 2. ES_PORT="0000"
 3. VERA_HOST="0.0.0.0"         (IP of your vera hub)
-
+</pre>
 These variables are defaulted but can be overridden.
-
+<pre>
 1. VERA_LOG_INDEX="vera-log"   (Name of index to create in ES)
 2. PYTHONUNBUFFERED=1          (Docker Only)
 3. SLEEP_TIME=60               (How much time to sleep between log calls)
-
+4. SKIP_RELOAD="false"         (Whenever the program restarts clear elastic-search index/policy/template, otherwise dups will occur)
+</pre>
 ## What's Missing
 - Not support for a username/password for Elastic Search
 - Tests
