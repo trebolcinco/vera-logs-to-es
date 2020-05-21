@@ -19,8 +19,14 @@ These variables are defaulted but can be overridden.
 1. VERA_LOG_INDEX="vera-log"   (Name of index to create in ES)
 2. PYTHONUNBUFFERED=1          (Docker Only)
 3. SLEEP_TIME=60               (How much time to sleep between log calls)
-4. SKIP_RELOAD="false"         (Whenever the program restarts clear elastic-search index/policy/template, otherwise dups will occur)
+4. SKIP_RELOAD="false"         (*replace index, policy and template at startup"
 </pre>
+
+## Notes
+<pre>
+- *SKIP_RELOAD - Reload is neccessary due to Docker resetting a container and then on restart the app would reread log from start and duplicates happen.
+</pre>
+
 ## What's Missing
 - Not support for a username/password for Elastic Search
 - Tests
