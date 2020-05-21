@@ -35,7 +35,7 @@ date_exp = re.compile(r'\d{2}[-/]\d{2}[-/]\d{2} \d{1,2}:\d{2}:\d{2}.\d{3}')
 
 if not skip_reload:
     reload_es(es_base_url)
-    print("Elastic Search index {} has been deleted and reset.".format(vera_log_index))
+    print("Elastic Search index {} has been deleted and reset...".format(vera_log_index))
 
 def compose(message, timestamp):
     doc = {
@@ -52,9 +52,8 @@ def compose(message, timestamp):
 last_line_count = 0
 while True:
     response = get_from_vera(url)
-    # if str(response) == "reboot":
-    #     lastLine = reboot
-    #     continue
+
+    ## BeautifulSoup is supposed to remove all HTML using text but many spans were left over, call again seems to resolve
     old_soup = BeautifulSoup(response.text, features="html.parser")
     soup = BeautifulSoup(old_soup.text, features="html.parser")
     allLines = soup.text.split('\n')
@@ -66,31 +65,25 @@ while True:
     last_line_count = len(allLines)
 
     lines = []
-    print('start index == {} and last_line_count = {}'.format(
+    print('DEBUG: start index == {} and last_line_count = {}'.format(
         start_index, last_line_count))
-    search = False
-    # print("Total # of lines {}".format(len./b (allLines)))
-    # Find the last lines we exported and start adding from there.
+
     for i in range(start_index, len(allLines)):
         line = allLines[i]
         if re.search(tag_line_exp, str(line)) and not appendedLine == line:
             lines.append(line)
             appendedLine = line
 
-    # now add those lines to elastic search
-    match = None
     local_time = datetime.now().replace(tzinfo=tz.tzlocal())
     push_message = "Sent {} log lines to ES @ {}".format(
         len(lines), local_time)
-    print(push_message)
+    #print(push_message)
     if len(lines) > 0:
         for line in lines:
             theLine = str(line).split('\n')
             for aLine in theLine:
                 strippedText = aLine.split('\t')
                 if re.search(tag_line_exp, aLine) and len(strippedText) > 2:
-                    if strippedText[2] == "UserData::TempLogFileSystemFailure start 0 <0x76608520>" and strippedText[1] == '05/20/20 3:17:28.369':
-                        print('dup @', strippedText[1])
                     message = BeautifulSoup(
                         strippedText[2], features="html.parser").text
                     timestamp = datetime.strptime(

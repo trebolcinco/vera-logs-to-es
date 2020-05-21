@@ -2,7 +2,7 @@
 Scrapes vera logs from the hubs http endpoint and then pushes them to Elastic Search.
 
 ## Elastic Search
-- See the files in the elastic-search folder, you can use the example shell script to install your index but you'll need to set the ip.
+- Vera-Logs-To_ES will automatically create the logs and policy for you, if you want a different policy fork and update.
 
 - A timestamp is required, it will be set to the logs timestamp.
 
@@ -19,7 +19,7 @@ These variables are defaulted but can be overridden.
 1. VERA_LOG_INDEX="vera-log"   (Name of index to create in ES)
 2. PYTHONUNBUFFERED=1          (Docker Only)
 3. SLEEP_TIME=60               (How much time to sleep between log calls)
-4. SKIP_RELOAD="false"         (*replace index, policy and template at startup"
+4. SKIP_RELOAD="false"         (Replace index, policy and template at startup"
 </pre>
 
 ## Notes

@@ -3,6 +3,7 @@ import time
 import os
 sleep_time = int(os.environ['SLEEP_TIME'])
 vera_log_index = os.environ["VERA_LOG_INDEX"]
+
 def submit_to_es(es, doc):
 
     while True:

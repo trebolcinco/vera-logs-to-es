@@ -6,15 +6,8 @@ from datetime import datetime
 from datetime import timedelta
 import os
 sleep_time = int(os.environ['SLEEP_TIME'])
-# reboot_time = None
-# if os.environ.get('REBOOT_TIME'):
-#   init_reboot_time = datetime.strptime(os.environ['REBOOT_TIME'],"%H:%M:%S")
-# else:
-#   init_reboot_time = None
 
 def get_from_vera(url):
-  # if init_reboot_time:
-  #  reboot_time = init_reboot_time.replace(year=datetime.now().year, month=datetime.now().month, day=datetime.now().day)
 
   while True:
     try:
