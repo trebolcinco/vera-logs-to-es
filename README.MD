@@ -2,7 +2,7 @@
 Scrapes vera logs from the hubs http endpoint and then pushes them to Elastic Search.
 
 ## Elastic Search
-- Vera-Logs-To_ES will automatically create the logs and policy for you, if you want a different policy fork and update.
+- Vera-Logs-To_ES will automatically create the log index and policy for you, if you want a different policy fork and update.
 
 - A timestamp is required, it will be set to the logs timestamp.
 
