@@ -23,9 +23,7 @@ These variables are defaulted but can be overridden.
 </pre>
 
 ## Notes
-<pre>
-- *SKIP_RELOAD - Reload is neccessary due to Docker resetting a container and then on restart the app would reread log from start and duplicates happen.
-</pre>
+1. SKIP_RELOAD - Reload is neccessary due to Docker resetting a container and then on restart the app would reread log from start and duplicates happen.
 
 ## What's Missing
 - Not support for a username/password for Elastic Search
