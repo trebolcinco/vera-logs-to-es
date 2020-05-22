@@ -4,7 +4,7 @@ Scrapes vera logs from the hubs http endpoint and then pushes them to Elastic Se
 ## Elastic Search
 - Vera-Logs-To_ES will automatically create the log index and policy for you, if you want a different policy fork and update.
 
-- A timestamp is required, only Vera log lines that include a timestamp will be pushed to ES.  
+- A timestamp is required, only Vera log lines that include a timestamp will be pushed to ES.
 
 ## Variables
 Following varaibles need to be set:
@@ -23,8 +23,24 @@ These variables are defaulted but can be overridden.
 </pre>
 
 ## Notes
+<pre>
 1. SKIP_RELOAD - Reload is neccessary due to Docker resetting a container and then on restart the app would reread log from start and duplicates happen.
-
+2. Log Levels
+ Log levels for data sent to the Z-Wave dongle:
+      01 = critical errors
+      02 = warnings
+      03 = start/stop/reload events
+      04 = jobs
+      05 = warnings
+      06 = variables (which indicates state changes)
+      07 = events
+      08 = commands
+      10 = status messages
+      41 = data sent to the Z-Wave dongle
+      42 = data received from the Z-Wave dongle
+      50 = luup log
+</pre?>
 ## What's Missing
 - Not support for a username/password for Elastic Search
 - Tests
+

@@ -37,14 +37,15 @@ if not skip_reload:
     reload_es(es_base_url)
     print("Elastic Search index {} has been deleted and reset...".format(vera_log_index))
 
-def compose(message, timestamp):
+def compose(message, timestamp, log_level):
     doc = {
         'timestamp': convert_to_utc(timestamp),
         'message': message,
         'vera_host': vera_host,
         'es_host': es_host,
         'es_port': es_port,
-        'machine_time': datetime.now()
+        'machine_time': datetime.now(),
+        'log_level': log_level
     }
     return doc
 
@@ -88,7 +89,21 @@ while True:
                         strippedText[2], features="html.parser").text
                     timestamp = datetime.strptime(
                         re.search(date_exp, aLine).group(0),  '%m/%d/%y %H:%M:%S.%f')
-                    submit_to_es(es, compose(message, timestamp))
+                    submit_to_es(es, compose(message, timestamp, strippedText[0]))
         lastLine = aLine
-        submit_to_es(es, compose(push_message, datetime.now()))
+        submit_to_es(es, compose(push_message, datetime.now(),"10"))
     time.sleep(sleep_time)
+
+# Log levels for data sent to the Z-Wave dongle:
+# 01 = critical errors
+# 02 = warnings
+# 03 = start/stop/reload events
+# 04 = jobs
+# 05 = warnings
+# 06 = variables (which indicates state changes)
+# 07 = events
+# 08 = commands
+# 10 = status messages
+# 41 = data sent to the Z-Wave dongle
+# 42 = data received from the Z-Wave dongle
+# 50 = luup log
