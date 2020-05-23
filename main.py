@@ -87,9 +87,14 @@ while True:
                 if re.search(tag_line_exp, aLine) and len(strippedText) > 2:
                     message = BeautifulSoup(
                         strippedText[2], features="html.parser").text
+                    log_level = BeautifulSoup(
+                        strippedText[0], features="html.parser").text
+                    if len(log_level) > 2:
+                        raise Exception("log Level not correct")
+
                     timestamp = datetime.strptime(
                         re.search(date_exp, aLine).group(0),  '%m/%d/%y %H:%M:%S.%f')
-                    submit_to_es(es, compose(message, timestamp, strippedText[0]))
+                    submit_to_es(es, compose(message, timestamp, log_level))
         lastLine = aLine
         submit_to_es(es, compose(push_message, datetime.now(),"10"))
     time.sleep(sleep_time)
