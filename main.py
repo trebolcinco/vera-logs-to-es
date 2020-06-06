@@ -32,6 +32,7 @@ es_base_url = "http://{}:{}".format(es_host, es_port)
 tag_line_exp = re.compile(
     r'\d{2}[\t]\d{2}[-/]\d{2}[-/]\d{2} \d{1,2}:\d{2}:\d{2}.\d{3}')
 date_exp = re.compile(r'\d{2}[-/]\d{2}[-/]\d{2} \d{1,2}:\d{2}:\d{2}.\d{3}')
+index_tag = re.compile(r'^<.{10}>$')
 
 if not skip_reload:
     reload_es(es_base_url)
@@ -75,11 +76,8 @@ while True:
             lines.append(line)
             appendedLine = line
 
-    local_time = datetime.now().replace(tzinfo=tz.tzlocal())
-    push_message = "Sent {} log lines to ES @ {}".format(
-        len(lines), local_time)
-    #print(push_message)
     if len(lines) > 0:
+        line_count = 0
         for line in lines:
             theLine = str(line).split('\n')
             for aLine in theLine:
@@ -87,15 +85,22 @@ while True:
                 if re.search(tag_line_exp, aLine) and len(strippedText) > 2:
                     message = BeautifulSoup(
                         strippedText[2], features="html.parser").text
+
+                    if re.search(index_tag, message.strip()) or message.strip() == "":
+                        # print("Skipping message, s/b tag only = ",message.strip())
+                        # if the message is just a <0x12345678> tag then skip it
+                        continue
+
                     log_level = BeautifulSoup(
                         strippedText[0], features="html.parser").text
-                    if len(log_level) > 2:
-                        raise Exception("log Level not correct")
 
                     timestamp = datetime.strptime(
                         re.search(date_exp, aLine).group(0),  '%m/%d/%y %H:%M:%S.%f')
                     submit_to_es(es, compose(message, timestamp, log_level))
+                    line_count = line_count + 1
         lastLine = aLine
+        local_time = datetime.now().replace(tzinfo=tz.tzlocal())
+        push_message = "Sent {} log lines to ES @ {}".format(len(lines), local_time)
         submit_to_es(es, compose(push_message, datetime.now(),"10"))
     time.sleep(sleep_time)
 
